@@ -13,14 +13,21 @@ import os
 
 app = Flask(__name__)
 
+def getId(videourl):
+    vidid=videourl.find('watch?v=')
+    VId = videourl[vidid+8:vidid+19]
+    if vidid==-1:
+        vidid=videourl.find('be/')
+        VId=videourl[vidid+3:]
+    return VId
 
 @app.route('/', methods=('GET','POST'))
 def index():
     if request.method == 'POST':
         url = request.form['url']
-        loader = YoutubeLoader.from_youtube_url(url, add_video_info=True, language = 'es')
+        loader = YoutubeLoader.from_youtube_url("https://www.youtube.com/watch?v="+ getId(url), add_video_info=True, language = 'es')
+
         result = loader.load()
-        
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000,chunk_overlap=0)
         texts = text_splitter.split_documents(result)
         texts_trim = texts[:5]
