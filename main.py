@@ -21,13 +21,14 @@ def getId(videourl):
         VId=videourl[vidid+3:]
     return VId
 
+
 @app.route('/', methods=('GET','POST'))
 def index():
     if request.method == 'POST':
-        url = request.form['url']
-        loader = YoutubeLoader.from_youtube_url("https://www.youtube.com/watch?v="+ getId(url), add_video_info=True, language = 'es')
-
+        videoComplete = request.form['url']
+        loader = YoutubeLoader.from_youtube_url(("https://www.youtube.com/watch?v=" + getId(videoComplete)), add_video_info=True, language = 'es')
         result = loader.load()
+        
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000,chunk_overlap=0)
         texts = text_splitter.split_documents(result)
         texts_trim = texts[:5]
@@ -43,10 +44,6 @@ def index():
 
         return render_template('index.html',result = chain.run(texts_trim))
         
-
-    #user_ip = request.remote_addr
-    #response = make_response(redirect('/hello'))
-    #response.set_cookie('user_ip',user_ip)
     result = request.args.get('url')
     return render_template('index.html', result=result)
 
