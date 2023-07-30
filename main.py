@@ -9,7 +9,6 @@ from langchain.llms import OpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import OpenAI
-import os
 
 app = Flask(__name__)
 
@@ -20,7 +19,6 @@ def getId(videourl):
         vidid=videourl.find('be/')
         VId=videourl[vidid+3:]
     return VId
-
 
 @app.route('/', methods=('GET','POST'))
 def index():
@@ -46,7 +44,6 @@ def index():
         
     result = request.args.get('url')
     return render_template('index.html', result=result)
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
